@@ -1,0 +1,101 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /security
+logging:
+  # 将相关的日志记录器分组，以便同时对它们进行配置，通常是非常有用的。例如，您可能经常更改所有 Tomcat 相关日志记录器的日志记录级别，但却不容易记住顶级软件包。
+  #group:
+  #  tomcat: "org.apache.catalina,org.apache.coyote,org.apache.tomcat"
+  # 给指定包级别的日志。
+  level:
+    org.springframework.security: debug
+    org.springframework.web: info
+    org.springframework.test: info
+  # 设置日志输出的文件及文件日志
+  #file:
+  #  name: securityDemo.log
+  #  path: E:\jast\
+spring:
+  security:
+    user:
+      name: admin
+      password: 123456
+  profiles:
+    active: dev
+  # 数据源配置
+  datasource:
+    username: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://119.29.237.44:3306/vista?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+    password: zAChoucj_21A
+    hikari:
+      # 最小空闲连接，默认值10，小于0或大于maximum-pool-size，都会重置为maximum-pool-size
+      minimum-idle: 10
+      # 最大连接数，小于等于0会被重置为默认值10；大于零小于1会被重置为minimum-idle的值
+      maximum-pool-size: 20
+      # 空闲连接超时时间，默认值600000（10分钟），大于等于max-lifetime且max-lifetime>0，会被重置为0；不等于0且小于10秒，会被重置为10秒。
+      idle-timeout: 500000
+      # 连接最大存活时间,不等于0且小于30秒，会被重置为默认值30分钟，设置应该比mysql设置的超时时间短:
+      max-lifetime: 540000
+      # 连接超时时间：毫秒，小于250毫秒，否则被重置为默认值30秒
+      connection-timeout: 60000
+      # 用于测试连接是否可用的查询语句
+      connection-test-query: SELECT 1
+  # redisson 配置
+  redis:
+    redisson:
+      # singleServerConfig 代表单机配置
+      #    idleConnectionTimeout: 10000 #如果池中连接在超时时间内未被使用，且当前连接数大于闲置连接池的最小值，则该连接将被关闭并从池中移除。以毫秒为单位。
+      #      connectTimeout: 10000 #连接任何 Redis 服务器时的超时（毫秒）。
+      #      timeout: 3000 #Redis 服务器响应超时。Redis 命令成功发送后开始倒计时。以毫秒为单位。
+      #      retryAttempts: 3 #如果在重试多次后仍无法向 Redis 服务器发送 Redis 命令，则会出现错误。但如果发送成功，就会开始超时。
+      #      retryInterval: 1500 #再次尝试发送 Redis 命令的时间间隔（毫秒）。
+      #      password: 8426$123456 #用于 Redis 服务器身份验证的密码。
+      #      subscriptionsPerConnection: 5 #每个订阅连接的订阅次数限制。由 RTopic、RPatternTopic、RLock、RSemaphore、RCountDownLatch、RClusteredLocalCachedMap、RClusteredLocalCachedMapCache、RLocalCachedMap、RLocalCachedMapCache 对象和 Hibernate READ_WRITE 缓存策略使用。
+      #      clientName: null
+      #      address: "redis://119.29.237.44:6379"  #主机：端口格式的 Redis 服务器地址。使用 rediss:// 协议进行 SSL 连接。
+      #      subscriptionConnectionMinimumIdleSize: 1 #最小闲置 Redis 订阅连接数。
+      #      subscriptionConnectionPoolSize: 50 #Redis 订阅连接的最大池大小。
+      #      connectionMinimumIdleSize: 24 #最小闲置 Redis 连接数。
+      #      connectionPoolSize: 64 #Redis 连接池的最大容量。
+      #      database: 0 #用于 Redis 连接的数据库索引
+      #      dnsMonitoringInterval: 5000 #DNS 更改监控间隔。应用程序必须确保 JVM DNS 缓存 TTL 足够低，以支持此功能。设置 -1 则禁用。代理模式下支持单个主机名的多个 IP 绑定。
+      #     threads: 16 #RTopic 对象的所有监听器、RRemoteService 的调用处理程序、RTopic 对象和 RExecutorService 任务共享线程量。
+      #     nettyThreads: 32 #Redisson 使用的所有内部 Redis 客户端共享的线程量。用于 Redis 响应解码和命令发送的净线程数。0 = 内核数 * 2
+      #     codec: !<org.redisson.codec.Kryo5Codec> { }
+      #     transportMode: "NIO"
+      config: | 
+        singleServerConfig:
+          idleConnectionTimeout: 10000
+          connectTimeout: 10000
+          timeout: 3000
+          retryAttempts: 3
+          retryInterval: 1500
+          password: 8426$123456
+          subscriptionsPerConnection: 5
+          clientName: null
+          address: "redis://119.29.237.44:6379"
+          subscriptionConnectionMinimumIdleSize: 1
+          subscriptionConnectionPoolSize: 50
+          connectionMinimumIdleSize: 24
+          connectionPoolSize: 64
+          database: 0
+          dnsMonitoringInterval: 5000
+        threads: 16
+        nettyThreads: 32
+        codec: !<org.redisson.codec.JsonJacksonCodec> { }
+        transportMode: "NIO"
+# mybatis-plus 配置
+mybatis-plus:
+  check-config-location: true
+  mapper-locations: classpath:mapper/*:xml
+  global-config:
+    banner: false
+    db-config:
+      id-type: assign_id
+      table-prefix: vista_
+  configuration:
+    # 日志打印输出
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 是否开启自动驼峰命名规则映射:从数据库列名到Java属性驼峰命名的类似映射
+    map-underscore-to-camel-case: true
