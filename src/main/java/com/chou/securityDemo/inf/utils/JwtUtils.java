@@ -1,13 +1,10 @@
 package com.chou.securityDemo.inf.utils;
 
-import cn.hutool.core.lang.generator.UUIDGenerator;
 import cn.hutool.core.map.MapUtil;
 import com.chou.securityDemo.domain.auth.JwtTokenInfo;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwsHeader;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,11 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
-import java.security.KeyFactory;
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -95,9 +89,8 @@ public class JwtUtils {
 		if (expiration.after(new Date())){
 			throw new RuntimeException("token过期请重新获取！");
 		}
-		// TODO校验是否被篡改
+		// 校验是否被篡改
 		String[] split = token.split(".");
-
 		return false;
 	}
 
