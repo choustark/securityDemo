@@ -1,8 +1,7 @@
 package com.chou.securityDemo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.chou.securityDemo.domain.entity.LoginUser;
+import com.chou.securityDemo.domain.auth.LoginUser;
 import com.chou.securityDemo.domain.entity.User;
 import com.chou.securityDemo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;

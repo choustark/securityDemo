@@ -1,5 +1,6 @@
-package com.chou.securityDemo.domain.entity;
+package com.chou.securityDemo.domain.auth;
 
+import com.chou.securityDemo.domain.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
