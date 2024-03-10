@@ -79,8 +79,8 @@ public class SecurityConfig {
 	 * 密码加密器
 	 * @return
 	 */
-	/*@Bean
+	@Bean
 	public PasswordEncoder bCryptPassword(){
 		return new BCryptPasswordEncoder();
-	}*/
+	}
 }

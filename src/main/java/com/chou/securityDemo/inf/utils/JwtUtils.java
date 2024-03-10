@@ -1,6 +1,10 @@
 package com.chou.securityDemo.inf.utils;
 
+import cn.hutool.core.lang.UUID;
+import cn.hutool.core.lang.generator.UUIDGenerator;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import com.chou.securityDemo.domain.auth.JwtTokenInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -15,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @Author Chou
@@ -69,34 +72,42 @@ public class JwtUtils {
 				.compact();
 	}
 	// 解析JWT
-	public static Claims parseToken(String token) {
-		if (StringUtils.isBlank(token)){
+	public static Claims parseToken(String jwt) {
+		if (StringUtils.isBlank(jwt)){
 			throw new RuntimeException("无效的token值");
 		}
 		JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
-		return jwtParser.parseClaimsJws(token).getBody();
+		return jwtParser.parseClaimsJws(jwt).getBody();
 	}
 
 
 	// 验证JWT是否有效
-	public static boolean validateToken(String token) {
+	public static boolean validateToken(String jwt) {
 		// 校验是否过期
-		if (StringUtils.isBlank(token)){
+		if (StringUtils.isBlank(jwt)){
 			throw new RuntimeException("无效的token值");
 		}
 		JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
-		Date expiration = jwtParser.parseClaimsJws(token).getBody().getExpiration();
+		Date expiration = jwtParser.parseClaimsJws(jwt).getBody().getExpiration();
 		if (expiration.after(new Date())){
 			throw new RuntimeException("token过期请重新获取！");
 		}
 		// 校验是否被篡改
-		String[] split = token.split(".");
-		return false;
+		try {
+			jwtParser.parseClaimsJws(jwt);
+			// 如果能成功解析且没有抛出异常，则说明签名有效，JWT未被篡改
+			return true;
+		} catch (Exception e) {
+			// 若解析时出现异常，通常意味着签名无效或者内容已被篡改
+			log.error("token验证失败，可能是被篡改或是无效的token", e);
+			return false;
+		}
 	}
 
 	public static void main(String[] args) {
+
 		JwtTokenInfo tokenInfo = JwtTokenInfo.builder()
-				.subject(UUID.randomUUID().toString())
+				.subject(UUID.fastUUID().toString(true))
 				.userId(2024022L)
 				.userName("chou")
 				.build();
@@ -113,6 +124,5 @@ public class JwtUtils {
 		log.info("parseToken claims issuedAt is >>>>> {}",issuedAt);
 		JwsHeader jwsHeader = claimsJws.getHeader();
 		log.info("parseToken header is >>>>> {}",jwsHeader);
-		JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
 	}
 }

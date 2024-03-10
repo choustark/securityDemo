@@ -19,4 +19,9 @@ public class LoginController {
 	public String login(){
 		return "login";
 	}
+
+	@RequestMapping("/register")
+	public void register(){
+
+	}
 }
