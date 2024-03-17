@@ -1,8 +1,14 @@
 package com.chou.securityDemo.controller;
 
-import org.springframework.stereotype.Controller;
+import com.chou.securityDemo.domain.auth.UserLogin;
+import com.chou.securityDemo.service.LoginService;
+import com.chou.securityDemo.service.UserService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * @Author Chou
@@ -15,12 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping
 public class LoginController {
 
-	@RequestMapping("/login")
-	public String login(){
-		return "login";
+	@Resource
+	private UserService userService;
+
+	@Resource
+	private LoginService loginService;
+
+	@PostMapping("/login")
+	public String login(@RequestBody UserLogin userLogin){
+		loginService.login(userLogin);
+		return null;
 	}
 
-	@RequestMapping("/register")
+	@PostMapping("/register")
 	public void register(){
 
 	}
