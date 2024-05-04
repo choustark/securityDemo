@@ -1,9 +1,8 @@
 package com.chou.securityDemo.service.impl;
 
-import com.chou.securityDemo.domain.auth.UserLogin;
+import com.chou.securityDemo.controller.request.UserLoginRequest;
 import com.chou.securityDemo.service.LoginService;
 import com.chou.securityDemo.service.UserService;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,7 +21,7 @@ public class LoginServiceImpl implements LoginService {
 	private UserService userService;
 
 	@Override
-	public void login(UserLogin userLogin) {
+	public void login(UserLoginRequest userLogin) {
 
 	}
 }

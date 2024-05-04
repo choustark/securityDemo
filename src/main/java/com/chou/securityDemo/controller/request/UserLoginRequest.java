@@ -1,4 +1,4 @@
-package com.chou.securityDemo.domain.auth;
+package com.chou.securityDemo.controller.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +19,17 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserLogin implements Serializable {
+public class UserLoginRequest implements Serializable {
 	public static final long serialVersionUID = -9079057098699548888L;
+
+	/**
+	 * 用户名
+	 */
+	private String userName;
+
+	/**
+	 * 密码
+	 */
+	private String password;
+
 }

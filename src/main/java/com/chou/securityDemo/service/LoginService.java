@@ -1,6 +1,6 @@
 package com.chou.securityDemo.service;
 
-import com.chou.securityDemo.domain.auth.UserLogin;
+import com.chou.securityDemo.controller.request.UserLoginRequest;
 
 /**
  * @Author Chou
@@ -10,5 +10,5 @@ import com.chou.securityDemo.domain.auth.UserLogin;
  * @Version 1.0
  **/
 public interface LoginService {
-	void login(UserLogin userLogin);
+	void login(UserLoginRequest userLogin);
 }

@@ -85,6 +85,9 @@ spring:
         nettyThreads: 32
         codec: !<org.redisson.codec.JsonJacksonCodec> { }
         transportMode: "NIO"
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 # mybatis-plus 配置
 mybatis-plus:
   check-config-location: true
@@ -99,3 +102,31 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     # 是否开启自动驼峰命名规则映射:从数据库列名到Java属性驼峰命名的类似映射
     map-underscore-to-camel-case: true
+## swagger 增强配置
+knife4j:
+  # 是否开启增强配置
+  enable: true
+  setting:
+    language: zh_cn
+    enable-swagger-models: true
+    enable-open-api: true
+    enable-document-manage: true
+    swagger-model-name: 出入差实体类列表
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  # 分组配置
+  group-configs:
+    # 通过路径匹配分组
+    #- group: 用户
+    #  paths-to-match:
+    #    - /user/
+    # 通过包名匹配分组
+    - group: 统一鉴权管理
+      packages-to-scan:
+        - com.chou.securityDemo.controller
+
+
+
+

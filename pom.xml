@@ -119,6 +119,15 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--apiDocument-->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>
+            <version>4.5.0</version>
+        </dependency>
+        <!--apiDocument-->
+
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
