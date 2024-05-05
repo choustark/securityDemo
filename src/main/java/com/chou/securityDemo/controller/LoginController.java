@@ -8,6 +8,7 @@ import com.chou.securityDemo.inf.common.response.ResponseResult;
 import com.chou.securityDemo.service.LoginService;
 import com.chou.securityDemo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,7 +42,7 @@ public class LoginController {
 	 * @return
 	 */
 	@PostMapping("/login")
-	@Operation
+	@Operation(summary = "登录接口",description = "普通的登录接口")
 	public String login(@RequestBody UserLoginRequest userLoginRequest){
 		loginService.login(userLoginRequest);
 		return null;
@@ -52,6 +53,7 @@ public class LoginController {
 	 * @param registerRequest
 	 */
 	@PostMapping("/register")
+	@Operation(summary = "注册接口",description = "普通的注册接口")
 	public ResponseResult<String> register(@RequestBody RegisterRequest registerRequest){
 		RegisterDTO registerDTO = BeanUtil.copyProperties(registerRequest, RegisterDTO.class);
 		userService.register(registerDTO);
