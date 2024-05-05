@@ -1,6 +1,8 @@
 package com.chou.securityDemo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.chou.securityDemo.controller.request.RegisterRequest;
+import com.chou.securityDemo.domain.dto.RegisterDTO;
 import com.chou.securityDemo.domain.entity.User;
 
 /**
@@ -11,4 +13,9 @@ import com.chou.securityDemo.domain.entity.User;
  * @Version 1.0
  **/
 public interface UserService extends IService<User> {
+	/**
+	 * 用户注册
+	 * @param registerDTO
+	 */
+	void register(RegisterDTO registerDTO);
 }

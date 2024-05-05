@@ -1,9 +1,13 @@
 package com.chou.securityDemo.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.chou.securityDemo.controller.request.UserLoginRequest;
 import com.chou.securityDemo.controller.request.RegisterRequest;
+import com.chou.securityDemo.domain.dto.RegisterDTO;
+import com.chou.securityDemo.inf.common.response.ResponseResult;
 import com.chou.securityDemo.service.LoginService;
 import com.chou.securityDemo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +41,7 @@ public class LoginController {
 	 * @return
 	 */
 	@PostMapping("/login")
+	@Operation
 	public String login(@RequestBody UserLoginRequest userLoginRequest){
 		loginService.login(userLoginRequest);
 		return null;
@@ -47,7 +52,9 @@ public class LoginController {
 	 * @param registerRequest
 	 */
 	@PostMapping("/register")
-	public void register(@RequestBody RegisterRequest registerRequest){
-
+	public ResponseResult<String> register(@RequestBody RegisterRequest registerRequest){
+		RegisterDTO registerDTO = BeanUtil.copyProperties(registerRequest, RegisterDTO.class);
+		userService.register(registerDTO);
+		return ResponseResult.success(null,"注册成功");
 	}
 }

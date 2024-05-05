@@ -3,4 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chou.securityDemo.mapper.UserMapper">
 
+    <select id="alikeUserNameCount" resultType="java.lang.Integer">
+
+    </select>
 </mapper>
