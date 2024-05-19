@@ -1,15 +1,11 @@
 package com.chou.securityDemo;
 
 import cn.hutool.core.lang.UUID;
+import com.chou.securityDemo.domain.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.redisson.RedissonSet;
-import org.redisson.api.RBucket;
-import org.redisson.api.RList;
-import org.redisson.api.RMap;
-import org.redisson.api.RScoredSortedSet;
-import org.redisson.api.RSet;
-import org.redisson.api.RedissonClient;
+import org.redisson.api.*;
 import org.redisson.client.codec.StringCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,10 +29,19 @@ class SecurityDemoApplicationTests {
 		//stringType();
 		//mapType();
 		//zSetType();
-		listType();
+		//listType();
+		increm();
+	}
+
+	private void increm() {
+		long incremented = redissonClient.getAtomicLong("User").incrementAndGet();
+		log.info(">>>>>>>>>>>>>>>>>>>>>>> {}", incremented);
 	}
 
 	private void listType() {
+		RLiveObjectService liveObjectService = redissonClient.getLiveObjectService();
+		liveObjectService.attach(new User());
+
 		final RList<Object> rList = redissonClient.getList("l1");
 		rList.add("tom");
 		rList.add("king");

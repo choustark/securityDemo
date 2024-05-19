@@ -53,4 +53,9 @@ public class RegisterRequest implements Serializable {
 	@Schema(name = "email",description = "邮箱",type = "String",requiredMode = Schema.RequiredMode.AUTO,example = "12345678901@qq.com")
 	@Email(message = "邮箱格式错误!")
 	private String email;
+	/**
+	 * 性别
+	 */
+	@Schema(name = "email",description = "性别",type = "Integer",requiredMode = Schema.RequiredMode.AUTO,example = "1")
+	private Integer gender;
 }

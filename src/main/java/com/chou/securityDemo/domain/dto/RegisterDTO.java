@@ -45,4 +45,9 @@ public class RegisterDTO implements Serializable {
 	 * 邮箱
 	 */
 	private String email;
+
+	/**
+	 * 性别
+	 */
+	private Integer gender;
 }

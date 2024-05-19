@@ -62,7 +62,7 @@ spring:
       #      dnsMonitoringInterval: 5000 #DNS 更改监控间隔。应用程序必须确保 JVM DNS 缓存 TTL 足够低，以支持此功能。设置 -1 则禁用。代理模式下支持单个主机名的多个 IP 绑定。
       #     threads: 16 #RTopic 对象的所有监听器、RRemoteService 的调用处理程序、RTopic 对象和 RExecutorService 任务共享线程量。
       #     nettyThreads: 32 #Redisson 使用的所有内部 Redis 客户端共享的线程量。用于 Redis 响应解码和命令发送的净线程数。0 = 内核数 * 2
-      #     codec: !<org.redisson.codec.Kryo5Codec> { }
+      #     codec: !<org.redisson.codec.Kryo5Codec> { }  指定序列化器
       #     transportMode: "NIO"
       config: | 
         singleServerConfig:
