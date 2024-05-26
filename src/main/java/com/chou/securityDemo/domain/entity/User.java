@@ -1,13 +1,17 @@
 package com.chou.securityDemo.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
+
+
+
+
+
 
 /**
  * @Author Chou
@@ -17,16 +21,12 @@ import java.util.Date;
  * @Version 1.0
  **/
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @TableName("vista_user")
-public class User implements Serializable {
-	public static final long serialVersionUID = 6054144112660315561L;
-	/**
-	 * 主键
-	 */
-	private Long id;
+public class User extends BaseEntity {
 
 	/**
 	 * 名称
@@ -92,29 +92,4 @@ public class User implements Serializable {
 	 * 状态,0:正常，1:冻结
 	 */
 	private Integer status;
-
-	/**
-	 * 是否删除标识 1：是，0否
-	 */
-	private Integer isDel;
-
-	/**
-	 *  创建人
-	 */
-	private Long createdBy;
-
-	/**
-	 * 创建时间
-	 */
-	private Date createdDate;
-
-	/**
-	 * 更新人
-	 */
-	private Long updatedBy;
-
-	/**
-	 * 更新时间
-	 */
-	private Date updatedDate;
 }

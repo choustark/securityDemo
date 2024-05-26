@@ -91,7 +91,7 @@ spring:
 # mybatis-plus 配置
 mybatis-plus:
   check-config-location: true
-  mapper-locations: classpath:mapper/*:xml
+  mapper-locations: classpath:mapper/*Mapper.xml
   global-config:
     banner: false
     db-config:

@@ -9,8 +9,10 @@ import com.chou.securityDemo.mapper.UserMapper;
 import com.chou.securityDemo.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -44,7 +46,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void register(RegisterDTO registerDTO) {
+		Date now = new Date();
 		// 校验用户名是否存在相同的用户名
 		Integer alikeUserNameCount = userMapper.alikeUserNameCount(registerDTO.getUserName());
 		if (alikeUserNameCount > 0){
@@ -55,13 +59,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		// 入库
 		User user = User.builder()
 				.email(registerDTO.getEmail())
+				.phoneNumber(registerDTO.getPhoneNumber())
 				.name(registerDTO.getUserName())
 				.password(dbPassword)
 				.status(0)
 				.gender(Objects.isNull(registerDTO.getGender()) ? GenderTypeEnum.UN_KNOW.getValue() : registerDTO.getGender())
 				.userNo(serialNumberGenUtils.getSerialNumber(USER_NO_KEY, USER_NO_PREFIX, 4))
-				.isDel(0)
+				.deleteFlag(0)
 				.build();
+		user.insertBefore(0L);
 		userMapper.insert(user);
 
 	}

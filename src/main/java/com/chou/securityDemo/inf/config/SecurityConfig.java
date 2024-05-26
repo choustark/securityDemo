@@ -43,6 +43,7 @@ public class SecurityConfig {
 				auth.antMatchers("/static/**").permitAll()
 						.antMatchers("doc.html","doc.html/**","webjars/**","/v2/**", "/swagger-resources",
 								"/swagger-resources/**","/swagger-ui.html", "/swagger-ui.html/**","/swagger-ui/**").permitAll()
+						.antMatchers("/security/unify/register").permitAll()
 						//.anyRequest().authenticated()
 						.antMatchers("/").authenticated()
 						.and()
