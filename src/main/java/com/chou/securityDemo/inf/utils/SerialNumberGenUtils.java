@@ -11,6 +11,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,18 +37,24 @@ public class SerialNumberGenUtils {
      * @param length 编号长度
      * @return 编号
      */
-    public String getSerialNumber(String key,String prefix,Integer length) {
-        RLock rLock = redissonClient.getLock(key);
-        String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    public String getSerialNumber(String key, String prefix, Integer length) {
+        // TODO 加锁防止在高并发场景下生成重复编码
+        //RLock rLock = redissonClient.getLock(key);
+        String formatDay = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
         // 计算key的过期时间
         long endOfDay = DateUtil.endOfDay(new DateTime()).getTime();
         // 失效时间
-        long ttlTime = endOfDay-DateUtil.date().getTime();
+        long ttlTime = endOfDay - DateUtil.date().getTime();
+        // 获取自增序列
         RAtomicLong rAtomicLong = redissonClient.getAtomicLong(key);
-        // 设置超市时间
-        boolean expire = rAtomicLong.expire(Instant.ofEpochSecond(ttlTime));
+        // 设置超时时间
+        long currentValue = rAtomicLong.get();
         long incremented = rAtomicLong.incrementAndGet();
-        return null;
+        if (currentValue == 0) {
+            // 需要提前初始化，才能设置超时时间
+            rAtomicLong.expire(Duration.ofMillis(ttlTime));
+        }
+        return prefix + formatDay + getSequence(incremented, length);
     }
 
     public static void main(String[] args) {
@@ -56,5 +63,29 @@ public class SerialNumberGenUtils {
         long time = DateUtil.date().getTime();
         System.out.println("time >>>>" + time);
         System.out.println("System.currentTimeMillis()" + System.currentTimeMillis());
+    }
+
+
+    /**
+     * 补全自增的数据
+     *
+     * @param seq
+     * @param length
+     * @return String
+     */
+    private String getSequence(long seq, int length) {
+        String str = String.valueOf(seq);
+        int len = str.length();
+        // 取决于业务规模,应该不会到达4
+        if (len >= length) {
+            return str;
+        }
+        int rest = length - len;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < rest; i++) {
+            sb.append('0');
+        }
+        sb.append(str);
+        return sb.toString();
     }
 }

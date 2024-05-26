@@ -4,6 +4,6 @@
 <mapper namespace="com.chou.securityDemo.mapper.UserMapper">
 
     <select id="alikeUserNameCount" resultType="java.lang.Integer">
-
+        select count(*) from vista_user vu where vu.name = #{name}
     </select>
 </mapper>
