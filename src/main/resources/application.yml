@@ -26,8 +26,8 @@ spring:
   datasource:
     username: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://119.29.237.44:3306/vista?autoReconnect=true&useUnicode=true&characterEncoding=utf8
-    password: zAChoucj_21A
+    url:
+    password:
     hikari:
       # 最小空闲连接，默认值10，小于0或大于maximum-pool-size，都会重置为maximum-pool-size
       minimum-idle: 10
@@ -71,10 +71,10 @@ spring:
           timeout: 3000
           retryAttempts: 3
           retryInterval: 1500
-          password: 8426$123456
+          password: 
           subscriptionsPerConnection: 5
           clientName: null
-          address: "redis://119.29.237.44:6379"
+          address: 
           subscriptionConnectionMinimumIdleSize: 1
           subscriptionConnectionPoolSize: 50
           connectionMinimumIdleSize: 24
