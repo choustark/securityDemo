@@ -43,9 +43,9 @@ public class LoginController {
 	 */
 	@PostMapping("/login")
 	@Operation(summary = "登录接口",description = "普通的登录接口")
-	public String login(@RequestBody UserLoginRequest userLoginRequest){
-		loginService.login(userLoginRequest);
-		return null;
+	public ResponseResult<String> login(@RequestBody UserLoginRequest userLoginRequest){
+		String login = loginService.login(userLoginRequest);
+		return ResponseResult.success(login,"登录成功");
 	}
 
 	/**

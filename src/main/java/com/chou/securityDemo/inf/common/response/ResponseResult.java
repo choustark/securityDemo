@@ -15,7 +15,7 @@ public class ResponseResult<T> implements Serializable {
 	public static final long serialVersionUID = -3419191897119327877L;
 
 	private T data;
-	private String code;
+	private Integer code;
 	private String msg;
 	private String message;
 
@@ -24,11 +24,11 @@ public class ResponseResult<T> implements Serializable {
 
 	public ResponseResult(T data) {
 		this.data = data;
-		this.code = "200";
+		this.code = 200;
 		this.msg = "success";
 	}
 
-	public ResponseResult(T data, String code, String msg, String message) {
+	public ResponseResult(T data, Integer code, String msg, String message) {
 		this.data = data;
 		this.code = code;
 		this.msg = msg;
@@ -43,11 +43,11 @@ public class ResponseResult<T> implements Serializable {
 		this.data = data;
 	}
 
-	public String getCode() {
+	public Integer getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
+	public void setCode(Integer code) {
 		this.code = code;
 	}
 
@@ -73,7 +73,7 @@ public class ResponseResult<T> implements Serializable {
 	 * @return
 	 */
 	public static <T> ResponseResult<T> success(T data, String message) {
-		return new ResponseResult<>(data, "200", "success", message);
+		return new ResponseResult<>(data, 200, "success", message);
 	}
 
 	/**
@@ -81,8 +81,26 @@ public class ResponseResult<T> implements Serializable {
 	 * @return
 	 */
 	public static <T> ResponseResult<T> fail(T data){
-		return new ResponseResult<>(data, "500", "fail", "请求失败！");
+		return new ResponseResult<>(data, 500, "fail", "请求失败！");
 	}
+
+	/**
+	 * 执行失败
+	 * @return
+	 */
+	public static <T> ResponseResult<T> fail(String message){
+		return new ResponseResult<>(null, 401, "fail", message);
+	}
+
+
+	/**
+	 * 执行失败
+	 * @return
+	 */
+	public static <T> ResponseResult<T> fail(Integer code,String message){
+		return new ResponseResult<>(null, code, "fail", message);
+	}
+
 
 	@Override
 	public boolean equals(Object o) {

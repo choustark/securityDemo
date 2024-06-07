@@ -1,8 +1,12 @@
 package com.chou.securityDemo.inf.config;
 
+import com.chou.securityDemo.inf.common.exception.CustomizeAuthenticationEntryPoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,6 +35,9 @@ import javax.servlet.http.HttpServletResponse;
 @EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
+	@Resource
+	private CustomizeAuthenticationEntryPoint customizeAuthenticationEntryPoint;
+
 	/**
 	 * 配置security的
 	 *
@@ -41,15 +49,29 @@ public class SecurityConfig {
 		http.authorizeRequests((auth) -> {
 			try {
 				auth.antMatchers("/static/**").permitAll()
-						.antMatchers("doc.html","doc.html/**","webjars/**","/v2/**", "/swagger-resources",
-								"/swagger-resources/**","/swagger-ui.html", "/swagger-ui.html/**","/swagger-ui/**").permitAll()
+						// swaggerUi 放行资源
+						.antMatchers("doc.html",
+								"doc.html/**",
+								"webjars/**",
+								"/v2/**",
+								"/swagger-resources",
+								"/swagger-resources/**",
+								"/swagger-ui.html",
+								"/swagger-ui.html/**",
+								"/swagger-ui/**").permitAll()
+						// 登录、注册放行资源
 						.antMatchers("/security/unify/register").permitAll()
+						.antMatchers("/security/unify/login").permitAll()
 						//.anyRequest().authenticated()
 						.antMatchers("/").authenticated()
 						.and()
 						//不生成session 保持无状态
 						.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 						.and().formLogin()
+						// 异常处理
+						.and()
+						.exceptionHandling()
+						.authenticationEntryPoint(customizeAuthenticationEntryPoint)
 						// 登录页面配置
 						//.loginPage("/login.html")
 						//.loginProcessingUrl("/login")
@@ -86,4 +108,11 @@ public class SecurityConfig {
 	public PasswordEncoder bCryptPassword(){
 		return new BCryptPasswordEncoder();
 	}
+
+
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
+
 }

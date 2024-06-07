@@ -71,6 +71,7 @@ public class JwtUtils {
 				.signWith(key, SignatureAlgorithm.HS256)
 				.compact();
 	}
+
 	// 解析JWT
 	public static Claims parseToken(String jwt) {
 		if (StringUtils.isBlank(jwt)){

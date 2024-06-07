@@ -20,7 +20,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserLoginRequest implements Serializable {
-	public static final long serialVersionUID = -9079057098699548888L;
+	private static final long serialVersionUID = -9079057098699548888L;
 
 	/**
 	 * 用户名

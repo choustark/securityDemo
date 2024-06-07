@@ -24,7 +24,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Schema(name = "RegisterRequest", description = "用户注册请求参数")
 public class RegisterRequest implements Serializable {
-	public static final long serialVersionUID = 3358327519827499237L;
+	private static final long serialVersionUID = 3358327519827499237L;
 
 	/**
 	 * 用户名

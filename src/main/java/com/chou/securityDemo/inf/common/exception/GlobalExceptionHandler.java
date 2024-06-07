@@ -2,6 +2,7 @@ package com.chou.securityDemo.inf.common.exception;
 
 import com.chou.securityDemo.inf.common.response.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -39,5 +40,11 @@ public class GlobalExceptionHandler {
 		}
 		// 一般项目都会有自己定义的公共返回实体类，这里直接使用现成的 ResponseEntity 进行返回，同时设置 Http 状态码为 400
 		return ResponseResult.fail(result);
+	}
+
+	@ExceptionHandler(InternalAuthenticationServiceException.class)
+	@ResponseBody
+	public ResponseResult<Object> methodArgumentNotValidException(InternalAuthenticationServiceException e, HttpServletRequest request) {
+		return ResponseResult.fail(e.getMessage());
 	}
 }
