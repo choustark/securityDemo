@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -60,5 +61,14 @@ public class LoginServiceImpl implements LoginService {
 		String string = JwtUtils.generateToken(JwtTokenInfo.builder().userId(userId).build());
 		redissonClient.getBucket(String.format(LOGIN_TOKEN_KEY,userId)).set(loginUser,24,TimeUnit.HOURS);
 		return string;
+	}
+
+	@Override
+	public Boolean logout() {
+		UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+		LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+		Long id = loginUser.getUser().getId();
+		// 删除redis中的key值
+		return redissonClient.getBucket(String.format(LOGIN_TOKEN_KEY, id)).delete();
 	}
 }

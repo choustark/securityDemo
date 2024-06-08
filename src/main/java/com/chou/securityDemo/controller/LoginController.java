@@ -3,6 +3,7 @@ package com.chou.securityDemo.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.chou.securityDemo.controller.request.UserLoginRequest;
 import com.chou.securityDemo.controller.request.RegisterRequest;
+import com.chou.securityDemo.domain.auth.LoginUser;
 import com.chou.securityDemo.domain.dto.RegisterDTO;
 import com.chou.securityDemo.inf.common.response.ResponseResult;
 import com.chou.securityDemo.service.LoginService;
@@ -10,6 +11,9 @@ import com.chou.securityDemo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +40,7 @@ public class LoginController {
 	@Resource
 	private LoginService loginService;
 
+
 	/**
 	 * 登录
 	 * @param userLoginRequest
@@ -58,5 +63,12 @@ public class LoginController {
 		RegisterDTO registerDTO = BeanUtil.copyProperties(registerRequest, RegisterDTO.class);
 		userService.register(registerDTO);
 		return ResponseResult.success(null,"注册成功");
+	}
+
+	@PostMapping("/logout")
+	@Operation(summary = "登出接口",description = "普通的的登出接口")
+	public ResponseResult<Boolean> logout(){
+		Boolean string = loginService.logout();
+		return ResponseResult.success(string,"操作成功");
 	}
 }

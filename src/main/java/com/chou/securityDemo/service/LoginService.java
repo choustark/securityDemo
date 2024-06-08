@@ -13,4 +13,10 @@ public interface LoginService {
 	 * @param userLogin 登录信息
 	 */
 	String login(UserLoginRequest userLogin);
+
+	/**
+	 * 登出
+	 * @return
+	 */
+	Boolean logout();
 }

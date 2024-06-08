@@ -1,6 +1,7 @@
 package com.chou.securityDemo.inf.config;
 
 import com.chou.securityDemo.inf.common.exception.CustomizeAuthenticationEntryPoint;
+import com.chou.securityDemo.inf.filter.JwtAuthenticationTokenFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +39,9 @@ public class SecurityConfig {
 
 	@Resource
 	private CustomizeAuthenticationEntryPoint customizeAuthenticationEntryPoint;
+
+	@Resource
+	private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
 	/**
 	 * 配置security的
@@ -72,6 +77,9 @@ public class SecurityConfig {
 						.and()
 						.exceptionHandling()
 						.authenticationEntryPoint(customizeAuthenticationEntryPoint)
+						.and()
+						.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+						.csrf().disable();
 						// 登录页面配置
 						//.loginPage("/login.html")
 						//.loginProcessingUrl("/login")
@@ -92,7 +100,7 @@ public class SecurityConfig {
 
 							}
 						})*/
-						.and().csrf().disable();
+
 			} catch (Exception e) {
 				log.error("SecurityConfig occur error >>>>", e);
 			}

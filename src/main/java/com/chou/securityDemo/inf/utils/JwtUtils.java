@@ -114,6 +114,8 @@ public class JwtUtils {
 				.build();
 		String token = generateToken(tokenInfo);
 		log.info("generateToken jwt is >>>>> {}",token);
+		Claims claim = parseToken(token);
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {}",claim);
 		Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 		String signature =claimsJws.getSignature();
 		log.info("parseToken signature is >>>>> {}",signature);
