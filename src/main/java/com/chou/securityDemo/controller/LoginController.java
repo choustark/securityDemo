@@ -50,7 +50,7 @@ public class LoginController {
 	@Operation(summary = "登录接口",description = "普通的登录接口")
 	public ResponseResult<String> login(@RequestBody UserLoginRequest userLoginRequest){
 		String login = loginService.login(userLoginRequest);
-		return ResponseResult.success(login,"登录成功");
+		return ResponseResult.success("登录成功");
 	}
 
 	/**
@@ -62,13 +62,13 @@ public class LoginController {
 	public ResponseResult<String> register(@RequestBody RegisterRequest registerRequest){
 		RegisterDTO registerDTO = BeanUtil.copyProperties(registerRequest, RegisterDTO.class);
 		userService.register(registerDTO);
-		return ResponseResult.success(null,"注册成功");
+		return ResponseResult.success("注册成功");
 	}
 
 	@PostMapping("/logout")
 	@Operation(summary = "登出接口",description = "普通的的登出接口")
 	public ResponseResult<Boolean> logout(){
-		Boolean string = loginService.logout();
-		return ResponseResult.success(string,"操作成功");
+		Boolean isLogout = loginService.logout();
+		return ResponseResult.success(isLogout);
 	}
 }

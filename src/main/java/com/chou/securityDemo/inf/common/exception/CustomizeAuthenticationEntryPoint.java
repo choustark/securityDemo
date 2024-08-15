@@ -25,6 +25,6 @@ public class CustomizeAuthenticationEntryPoint implements AuthenticationEntryPoi
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.getWriter().write(JSONUtil.toJsonStr(ResponseResult.fail(403,authException.getMessage()), JSONConfig.create().setIgnoreNullValue(false)));
+        response.getWriter().write(JSONUtil.toJsonStr(ResponseResult.fail(), JSONConfig.create().setIgnoreNullValue(false)));
     }
 }

@@ -1,0 +1,21 @@
+CREATE TABLE `vista_user` (
+                              `id` bigint(20) NOT NULL COMMENT '主键',
+                              `name` varchar(255) NOT NULL COMMENT '名称',
+                              `password` varchar(246) NOT NULL COMMENT '密码',
+                              `user_no` varchar(32) NOT NULL COMMENT '用户编号',
+                              `gender` tinyint(4) DEFAULT NULL COMMENT '性别 0:女士,1:男士,2 未知',
+                              `email` varchar(255) DEFAULT NULL COMMENT '邮箱',
+                              `phone_number` varchar(255) DEFAULT NULL COMMENT '手机号码',
+                              `identity_card` varchar(100) DEFAULT NULL COMMENT '身份证',
+                              `head_portrait` varchar(360) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '头像',
+                              `province` varchar(30) DEFAULT NULL COMMENT '省份',
+                              `city` varchar(30) DEFAULT NULL COMMENT '所属市',
+                              `region` varchar(30) DEFAULT NULL COMMENT '所属区或者县',
+                              `last_login` timestamp NULL DEFAULT NULL COMMENT '用户最后一次登录时间',
+                              `status` tinyint(4) DEFAULT NULL COMMENT '状态,0:正常，1:冻结',
+                              `delete_flag` tinyint(4) DEFAULT NULL COMMENT '是否删除标识 1：是，0否',
+                              `created_by` bigint(20) NOT NULL COMMENT '创建人',
+                              `created_time` timestamp NOT NULL COMMENT '创建时间',
+                              `updated_by` bigint(20) NOT NULL COMMENT '更新人',
+                              `updated_time` timestamp NULL DEFAULT NULL COMMENT '更新时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户信息表';
