@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @Configuration
 // 开启springsecurity 之后会注册大量的servlet filter
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity(/*debug = true*/)
 public class SecurityConfig {
 
 	@Resource

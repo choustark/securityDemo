@@ -5,6 +5,7 @@ import com.chou.securityDemo.inf.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RedissonClient;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -36,7 +37,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //获取token
-        String token = request.getHeader("Token");
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.isBlank(token)){
             // 放行
             filterChain.doFilter(request,response);
@@ -48,7 +49,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             throw new RuntimeException("token非法！");
         }
         Claims claims = JwtUtils.parseToken(token);
-        String claimsId = claims.getId();
+        String claimsId = claims.get("id").toString();
         //从redis中获取用户信息
         String key = String.format(LOGIN_TOKEN_KEY, claimsId);
         LoginUser loginUser = (LoginUser) redissonClient.getBucket(key).get();

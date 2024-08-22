@@ -31,7 +31,7 @@ import java.util.Map;
 public class JwtUtils {
 
 	//私钥
-	private final static String SECRET = "secretKey";
+	private final static String SECRET = "SECRETKEY24082221404712312312312";
 
 	// 秘钥实例
 	private final static SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
@@ -68,7 +68,7 @@ public class JwtUtils {
 				// 设置失效时长，在此时间戳之后获得的 JWT 不得使用
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 				//签名
-				.signWith(key, SignatureAlgorithm.HS256)
+				.signWith(SignatureAlgorithm.HS256, SECRET.getBytes())
 				.compact();
 	}
 
@@ -77,7 +77,7 @@ public class JwtUtils {
 		if (StringUtils.isBlank(jwt)){
 			throw new RuntimeException("无效的token值");
 		}
-		JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
+		JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(SECRET.getBytes()).build();
 		return jwtParser.parseClaimsJws(jwt).getBody();
 	}
 
@@ -88,9 +88,9 @@ public class JwtUtils {
 		if (StringUtils.isBlank(jwt)){
 			throw new RuntimeException("无效的token值");
 		}
-		JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
+		JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(SECRET.getBytes()).build();
 		Date expiration = jwtParser.parseClaimsJws(jwt).getBody().getExpiration();
-		if (expiration.after(new Date())){
+		if (expiration.before(new Date())){
 			throw new RuntimeException("token过期请重新获取！");
 		}
 		// 校验是否被篡改
@@ -116,7 +116,7 @@ public class JwtUtils {
 		log.info("generateToken jwt is >>>>> {}",token);
 		Claims claim = parseToken(token);
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {}",claim);
-		Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+		Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(SECRET.getBytes()).build().parseClaimsJws(token);
 		String signature =claimsJws.getSignature();
 		log.info("parseToken signature is >>>>> {}",signature);
 		Claims claims = claimsJws.getBody();

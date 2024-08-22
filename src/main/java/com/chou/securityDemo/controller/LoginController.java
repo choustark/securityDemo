@@ -50,7 +50,7 @@ public class LoginController {
 	@Operation(summary = "登录接口",description = "普通的登录接口")
 	public ResponseResult<String> login(@RequestBody UserLoginRequest userLoginRequest){
 		String login = loginService.login(userLoginRequest);
-		return ResponseResult.success("登录成功");
+		return ResponseResult.success(login);
 	}
 
 	/**

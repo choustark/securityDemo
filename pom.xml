@@ -11,7 +11,7 @@
 	<groupId>com.chou</groupId>
 	<artifactId>securityDemo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>securityDemo</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -143,6 +143,21 @@
 			<artifactId>commons-collections4</artifactId>
 			<version>4.4</version>
 		</dependency>
+
+		<!--poi-->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>easyexcel</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.14.0</version>
+		</dependency>
+		<!--poi-->
+
 	</dependencies>
 
 	<build>
