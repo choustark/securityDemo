@@ -6,6 +6,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.fastjson.JSON;
+import com.chou.securityDemo.inf.excel.LimitExcelReadListener;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +62,7 @@ public class IndexController {
 		InputStream inputStream = null;
         try {
 			inputStream = file.getInputStream();
-			EasyExcel.read(inputStream, new ReadListener() {
+			/*EasyExcel.read(inputStream, new ReadListener() {
                 @Override
                 public void invoke(Object o, AnalysisContext analysisContext) {
 
@@ -77,12 +78,16 @@ public class IndexController {
 					log.info("invokeHead headMapInfo >>>>>>>>> {}",JSONUtil.toJsonStr(headMap));
 				}
 
-			}).sheet().doRead();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+			}).sheet().doRead();*/
+			LimitExcelReadListener limitExcelReadListener = new LimitExcelReadListener(7);
+			EasyExcel.read(inputStream,limitExcelReadListener).sheet().doRead();
+			log.info("limitExcelReadListener.headList >>>>>>>>>>> {}",JSONUtil.toJsonStr(limitExcelReadListener.getHeadList()));
+        } catch (Exception e) {
+			log.info("parse excel size = {}mb,cost {} ms",size/1014/1024,(System.currentTimeMillis()-start));
+			log.error(">>>>>> 读取表头以及第一行内容,抛出异常>>>>>>>",e);
         }finally {
 			IoUtil.close(inputStream);
 		}
-		log.info("parse excel size = {}mb,cost {} s",size/1014/1024,(System.currentTimeMillis()-start)/1000);
+		//log.info("parse excel size = {}mb,cost {} s",size/1014/1024,(System.currentTimeMillis()-start)/1000);
 	}
 }
