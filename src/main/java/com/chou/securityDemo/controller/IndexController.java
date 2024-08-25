@@ -3,8 +3,9 @@ package com.chou.securityDemo.controller;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.read.listener.ReadListener;
+import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.fastjson.JSON;
 import com.chou.securityDemo.inf.excel.LimitExcelReadListener;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,16 +16,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @Author Chou
@@ -56,38 +54,29 @@ public class IndexController {
 	@ResponseBody
 	@Operation(summary = "文件上传",description = "文件上传")
 	public void batchUpload(@Valid @NotNull(message = "上传文件不能为空") @RequestBody MultipartFile file) {
-		long start = System.currentTimeMillis();
-		long size = file.getSize();
-		log.info("file size >>>>>>>>>>>>>>>>>> {}", size);
 		InputStream inputStream = null;
-        try {
+		ExcelReader excelReader = null;
+		try {
+			long start = System.currentTimeMillis();
 			inputStream = file.getInputStream();
-			/*EasyExcel.read(inputStream, new ReadListener() {
-                @Override
-                public void invoke(Object o, AnalysisContext analysisContext) {
-
-                }
-
-                @Override
-                public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-
-                }
-
-				@Override
-				public void invokeHead(Map headMap, AnalysisContext context) {
-					log.info("invokeHead headMapInfo >>>>>>>>> {}",JSONUtil.toJsonStr(headMap));
-				}
-
-			}).sheet().doRead();*/
-			LimitExcelReadListener limitExcelReadListener = new LimitExcelReadListener(7);
-			EasyExcel.read(inputStream,limitExcelReadListener).sheet().doRead();
-			log.info("limitExcelReadListener.headList >>>>>>>>>>> {}",JSONUtil.toJsonStr(limitExcelReadListener.getHeadList()));
-        } catch (Exception e) {
-			log.info("parse excel size = {}mb,cost {} ms",size/1014/1024,(System.currentTimeMillis()-start));
-			log.error(">>>>>> 读取表头以及第一行内容,抛出异常>>>>>>>",e);
-        }finally {
-			IoUtil.close(inputStream);
+			excelReader = EasyExcel.read(inputStream).build();
+			for (ReadSheet readSheet : excelReader.excelExecutor().sheetList()) {
+				LimitExcelReadListener readListener = new LimitExcelReadListener(10);
+				String sheetName = readSheet.getSheetName();
+				ArrayList<ReadListener<?>> readListeners = new ArrayList<>();
+				readListeners.add(readListener);
+				readSheet.setCustomReadListenerList(readListeners);
+				excelReader.read(readSheet);
+				log.info("sheetName:{} header list {}", sheetName, readListener.getHeadList());
+				log.info("sheetName:{} contentOne list {}", sheetName, readListener.getDataList());
+			}
+			log.info("parse excel size = {}mb,cost {} ms", file.getSize() / 1014 / 1024, (System.currentTimeMillis() - start));
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+		if (Objects.nonNull(excelReader)){
+			excelReader.finish();
 		}
-		//log.info("parse excel size = {}mb,cost {} s",size/1014/1024,(System.currentTimeMillis()-start)/1000);
+		IoUtil.close(inputStream);
 	}
 }

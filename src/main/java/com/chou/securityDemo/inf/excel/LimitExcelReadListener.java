@@ -1,16 +1,14 @@
 package com.chou.securityDemo.inf.excel;
 
+import cn.hutool.json.JSONUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.excel.exception.ExcelAnalysisException;
+import com.alibaba.excel.read.metadata.holder.ReadRowHolder;
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Data
@@ -38,16 +36,12 @@ public class LimitExcelReadListener extends AnalysisEventListener<Map<Integer, S
         Map<Integer, String> newMap = this.getLimitColMap(integerStringMap,getColumNum());
         log.info(JSON.toJSONString(newMap));
         dataList.add(newMap);
-        // 控制读取前几行，读取完之后抛出异常，读取时捕获此异常，捕获到异常时代表读取完毕
-        if (dataList.size() == 1) {
-            throw new ExcelAnalysisException("1行20列读取完成");
-        }
     }
 
     @Override
     public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
         Map<Integer, String> newMap = this.getLimitColMap(headMap,getColumNum());
-        System.out.println(JSON.toJSONString(newMap));
+        log.info(JSON.toJSONString(newMap));
         headList.add(newMap);
     }
 
@@ -62,5 +56,18 @@ public class LimitExcelReadListener extends AnalysisEventListener<Map<Integer, S
             newMap.put(i,oldMap.get(i));
         }
         return newMap;
+    }
+
+    @Override
+    public boolean hasNext(AnalysisContext context) {
+        ReadRowHolder readRowHolder = context.readRowHolder();
+        Integer rowIndex = readRowHolder.getRowIndex();
+        if (Objects.nonNull(rowIndex) && rowIndex == 0 ){
+            log.info(">>>>>>>>rowIndex >>>>>> {} >>>>>>>>> {}",rowIndex,JSONUtil.toJsonStr(readRowHolder.getCellMap()));
+            return false;
+        }else {
+            log.info(">>>>>>>>>>> rowIndex {}",rowIndex);
+            return true;
+        }
     }
 }
