@@ -44,7 +44,7 @@ public class LimitExcelReadListener extends AnalysisEventListener<Map<Integer, S
     public void invoke(Map<Integer, String> integerStringMap, AnalysisContext analysisContext) {
         Map<Integer, String> newMap = this.getLimitColMap(integerStringMap, Objects.isNull(getColumNum())
                 ? integerStringMap.size() : this.getColumNum());
-        log.info(">>>>>LimitExcelReadListener#invoke {}>>>>>>",JSON.toJSONString(newMap));
+        //log.info(">>>>>LimitExcelReadListener#invoke {}>>>>>>",JSON.toJSONString(newMap));
         dataList.add(newMap);
     }
 
@@ -89,7 +89,7 @@ public class LimitExcelReadListener extends AnalysisEventListener<Map<Integer, S
         Integer integer = optional.get();
         CellData<?> cell = (CellData<?>) readRowHolder.getCellMap().get(integer);
         String stringValue = cell.getStringValue();
-        log.info(">>>>>>> 当前行{}的数据，第{}列内容是{}",rowNum,integer,stringValue);
+        //log.info(">>>>>>> 当前行{}的数据，第{}列内容是{}",rowNum,integer,stringValue);
         if (StringUtils.isNotBlank(chatName) && !stringValue.equals(chatName)) {
             isSameChatName = false;
         } else {
