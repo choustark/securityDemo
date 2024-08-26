@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
 			log.error("param {} = {} validate error ：{}", fieldError.getField(), fieldError.getRejectedValue(), fieldError.getDefaultMessage());
 			result.put(fieldError.getField(), fieldError.getDefaultMessage());
 		}
-		// 一般项目都会有自己定义的公共返回实体类，这里直接使用现成的 ResponseEntity 进行返回，同时设置 Http 状态码为 400
+		// 一般项目都会有自己定义的公共返回实体类，这里直接使用现成的 ResponseResult 进行返回，同时设置 Http 状态码为 400
 		return ResponseResult.fail(result);
 	}
 

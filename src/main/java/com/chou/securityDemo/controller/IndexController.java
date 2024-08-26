@@ -61,7 +61,7 @@ public class IndexController {
 			inputStream = file.getInputStream();
 			excelReader = EasyExcel.read(inputStream).build();
 			for (ReadSheet readSheet : excelReader.excelExecutor().sheetList()) {
-				LimitExcelReadListener readListener = new LimitExcelReadListener(10);
+				LimitExcelReadListener readListener = new LimitExcelReadListener(10,1);
 				String sheetName = readSheet.getSheetName();
 				ArrayList<ReadListener<?>> readListeners = new ArrayList<>();
 				readListeners.add(readListener);
@@ -69,6 +69,7 @@ public class IndexController {
 				excelReader.read(readSheet);
 				log.info("sheetName:{} header list {}", sheetName, readListener.getHeadList());
 				log.info("sheetName:{} contentOne list {}", sheetName, readListener.getDataList());
+				log.info("sheetName:{} readListener.isSameChatName value {}", sheetName, readListener.isSameChatName());
 			}
 			log.info("parse excel size = {}mb,cost {} ms", file.getSize() / 1014 / 1024, (System.currentTimeMillis() - start));
 		} catch (IOException e) {
