@@ -2,8 +2,10 @@ package com.chou.securityDemo.inf.excel;
 
 import cn.hutool.json.JSONUtil;
 import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.enums.CellDataTypeEnum;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.metadata.data.CellData;
+import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.read.metadata.holder.ReadRowHolder;
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
@@ -16,7 +18,6 @@ import java.util.*;
 @Data
 public class LimitExcelReadListener extends AnalysisEventListener<Map<Integer, String>> {
 
-    private Integer columNum;
 
     private Integer rowNum;
 
@@ -33,8 +34,7 @@ public class LimitExcelReadListener extends AnalysisEventListener<Map<Integer, S
      */
     private List<Map<Integer, String>> dataList = new ArrayList<>();
 
-    public LimitExcelReadListener(Integer columNum,Integer rowNum){
-        this.columNum = columNum;
+    public LimitExcelReadListener(Integer rowNum){
         this.rowNum = rowNum;
     }
 
@@ -42,16 +42,28 @@ public class LimitExcelReadListener extends AnalysisEventListener<Map<Integer, S
 
     @Override
     public void invoke(Map<Integer, String> integerStringMap, AnalysisContext analysisContext) {
-        Map<Integer, String> newMap = this.getLimitColMap(integerStringMap, Objects.isNull(getColumNum())
-                ? integerStringMap.size() : this.getColumNum());
-        //log.info(">>>>>LimitExcelReadListener#invoke {}>>>>>>",JSON.toJSONString(newMap));
+        Map<Integer, String> newMap = this.getLimitColMap(integerStringMap, integerStringMap.size());
+        String value = "聊天人Id";
+        Optional<Integer> optional = getHeadList().stream().flatMap(map -> map.entrySet().stream())
+                .filter(entry -> entry.getValue().equals(value))
+                .map(Map.Entry::getKey)
+                .findFirst();
+
+        String cellContent = integerStringMap.get(optional.get());
+        log.info(">>>>>LimitExcelReadListener#invoke value >>>>>>{}",cellContent);
+        //log.info(">>>>>>> 当前行{}的数据，第{}列内容是{}",rowNum,integer,stringValue);
+        if (StringUtils.isNotBlank(chatName) && !cellContent.equals(chatName)) {
+            isSameChatName = false;
+        } else {
+            chatName = cellContent;
+            this.rowNum++;
+        }
         dataList.add(newMap);
     }
 
     @Override
     public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
-        Map<Integer, String> newMap = this.getLimitColMap(headMap, Objects.isNull(getColumNum())
-                ? headMap.size() : this.getColumNum());
+        Map<Integer, String> newMap = this.getLimitColMap(headMap,  headMap.size());
         log.info(">>>>>LimitExcelReadListener#invokeHeadMap {}>>>>>>",JSON.toJSONString(newMap));
         headList.add(newMap);
     }
@@ -80,22 +92,6 @@ public class LimitExcelReadListener extends AnalysisEventListener<Map<Integer, S
         if (Objects.nonNull(rowIndex) && rowIndex >= rowNum && !isSameChatName) {
             log.info(">>>>>>>>hasNext.rowIndex >>>>>> {} >>>>>>>>> {}",rowIndex,JSONUtil.toJsonStr(readRowHolder.getCellMap()));
             return false;
-        }
-        String value = "聊天人Id";
-        Optional<Integer> optional = getHeadList().stream().flatMap(map -> map.entrySet().stream())
-                .filter(entry -> entry.getValue().equals(value))
-                .map(Map.Entry::getKey)
-                .findFirst();
-        Integer integer = optional.get();
-        CellData<?> cell = (CellData<?>) readRowHolder.getCellMap().get(integer);
-        String stringValue = cell.getStringValue();
-        //log.info(">>>>>>> 当前行{}的数据，第{}列内容是{}",rowNum,integer,stringValue);
-        if (StringUtils.isNotBlank(chatName) && !stringValue.equals(chatName)) {
-            isSameChatName = false;
-        } else {
-            chatName = stringValue;
-            this.rowNum++;
-            return true;
         }
         return super.hasNext(context);
     }

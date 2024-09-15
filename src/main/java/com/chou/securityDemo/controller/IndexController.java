@@ -4,6 +4,8 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
+import com.alibaba.excel.converters.date.DateStringConverter;
+import com.alibaba.excel.enums.ReadDefaultReturnEnum;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.fastjson.JSON;
@@ -59,9 +61,9 @@ public class IndexController {
 		try {
 			long start = System.currentTimeMillis();
 			inputStream = file.getInputStream();
-			excelReader = EasyExcel.read(inputStream).build();
+			excelReader = EasyExcel.read(inputStream).readDefaultReturn(ReadDefaultReturnEnum.STRING).build();
 			for (ReadSheet readSheet : excelReader.excelExecutor().sheetList()) {
-				LimitExcelReadListener readListener = new LimitExcelReadListener(10,1);
+				LimitExcelReadListener readListener = new LimitExcelReadListener(0);
 				String sheetName = readSheet.getSheetName();
 				ArrayList<ReadListener<?>> readListeners = new ArrayList<>();
 				readListeners.add(readListener);
