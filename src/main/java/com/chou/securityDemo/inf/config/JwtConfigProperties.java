@@ -8,4 +8,6 @@ package com.chou.securityDemo.inf.config;
  * @version 1.0
  **/
 public class JwtConfigProperties {
+
+
 }

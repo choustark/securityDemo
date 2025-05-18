@@ -1,25 +1,20 @@
 package com.chou.securityDemo.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.chou.securityDemo.controller.request.UserLoginRequest;
 import com.chou.securityDemo.controller.request.RegisterRequest;
-import com.chou.securityDemo.domain.auth.LoginUser;
+import com.chou.securityDemo.controller.request.SmsLoginRequest;
+import com.chou.securityDemo.controller.request.UserLoginRequest;
 import com.chou.securityDemo.domain.dto.RegisterDTO;
 import com.chou.securityDemo.inf.common.response.ResponseResult;
 import com.chou.securityDemo.service.LoginService;
 import com.chou.securityDemo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotBlank;
 
 /**
  * @Author Chou
@@ -63,6 +58,32 @@ public class LoginController {
 		RegisterDTO registerDTO = BeanUtil.copyProperties(registerRequest, RegisterDTO.class);
 		userService.register(registerDTO);
 		return ResponseResult.success("注册成功");
+	}
+
+
+	/**
+	 * 发送短信验证码
+	 * @param phoneNumber 手机号码
+	 * @return 操作结果
+	 */
+	@PostMapping("/send-sms-code")
+	@Operation(summary = "发送短信验证码接口", description = "向指定手机号发送登录或验证用的短信验证码")
+	@Parameter(name = "phoneNumber", description = "手机号码", required = true)
+	public ResponseResult<String> sendSmsCode(@RequestParam @NotBlank String phoneNumber) {
+		String result = loginService.sendSmsCode(phoneNumber);
+		return ResponseResult.success(result);
+	}
+
+	/**
+	 * 手机验证码登录
+	 * @param smsLoginRequest 手机验证码登录请求体
+	 * @return token
+	 */
+	@PostMapping("/sms-login")
+	@Operation(summary = "手机验证码登录接口", description = "使用手机号和短信验证码进行登录")
+	public ResponseResult<String> smsLogin(@RequestBody SmsLoginRequest smsLoginRequest) {
+		String token = loginService.smsLogin(smsLoginRequest);
+		return ResponseResult.success(token);
 	}
 
 	@PostMapping("/logout")
